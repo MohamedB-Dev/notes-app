@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'notes-app';
+  username = 'Mohamed Adnan';
 }
