@@ -1,0 +1,36 @@
+<mat-card class="mat-card mb-3">
+  <form (submit)="newNote(noteForm)" #noteForm="ngForm">
+    <mat-form-field class="w-100">
+      <mat-label class="fw-bold">Title of Note</mat-label>
+      <input 
+        class="fw-bold"
+        matInput 
+        type="text"
+        name="title"
+        #title="ngModel" 
+        ngModel
+        required
+        minlength="3">
+      <mat-error *ngIf="title.invalid">Please enter a title with at least 3 characters.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label class="fw-bold">Description of Note</mat-label>
+      <textarea 
+        matInput 
+        type="text" 
+        name="description"
+        rows="10" 
+        #description="ngModel"
+        ngModel
+        required></textarea>
+      <mat-error *ngIf="description.invalid">Please enter a description.</mat-error>
+    </mat-form-field>
+
+    <div class="text-center">
+      <button type="button" class="btn" (click)="newNote(noteForm)" *ngIf="!title.invalid && !description.invalid">
+        Add Note
+      </button>
+    </div>
+  </form>
+</mat-card>
