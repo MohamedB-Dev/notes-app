@@ -1,1 +1,18 @@
-<p>list works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4" *ngFor="let note of notes">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><b>{{ note.title }}</b></h5>
+                    <div class="card-text-scroll">
+                        <p class="card-text">{{ note.description }}</p>
+                      </div>
+                    <div class="text-center pt-2 d-flex justify-content-around">
+                        <button class="btn btn-primary" (click)="editNote(note)">Edit</button>
+                        <button class="btn btn-danger" (click)="deleteNote(note)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
