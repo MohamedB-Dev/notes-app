@@ -26,7 +26,6 @@ export class NotesService {
         });
       }))
       .subscribe((noteData: Note[]) => {
-        console.log(noteData);
         this.notes = noteData;
         this.notesUpdated.next([...this.notes]);
       });
@@ -47,8 +46,12 @@ export class NotesService {
   editNotes(noteId: string, title: string, description: string) {
     const note: Note = { noteId: noteId, title: title, description: description };
     this.http.put('http://localhost:3000/notes/' + noteId, note)
-      .subscribe(response => {
-        console.log(response);
+      .subscribe(() => {
+        const updatedNotes = [...this.notes];
+        const oldNoteIndex = updatedNotes.findIndex(p => p.noteId === note.noteId);
+        updatedNotes[oldNoteIndex] = note;
+        this.notes = updatedNotes;
+        this.notesUpdated.next([...this.notes]);
       });
   }
 
