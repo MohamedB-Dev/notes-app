@@ -11,11 +11,12 @@ import { map } from 'rxjs/operators';
 export class NotesService {
   private notes: Note[] = [];
   private notesUpdated = new Subject<Note[]>();
+  private readonly BASE_URL = 'http://localhost:3000';
 
   constructor(private http: HttpClient) { }
 
   getNote() {
-    this.http.get<{ message: string; data: any[] }>('http://localhost:3000/notes')
+    this.http.get<{ message: string; data: any[] }>(`${this.BASE_URL}/notes`)
       .pipe(map((response) => {
         return response.data.map(item => {
           return {
@@ -31,10 +32,9 @@ export class NotesService {
       });
   }
 
-
   addNotes(title: string, description: string) {
     const note: Note = { noteId: null, title: title, description: description };
-    this.http.post<{ message: string; noteId: string }>('http://localhost:3000/notes', note)
+    this.http.post<{ message: string; noteId: string }>(`${this.BASE_URL}/notes`, note)
       .subscribe((responseData) => {
         const id = responseData.noteId;
         note.noteId = id;
@@ -45,7 +45,7 @@ export class NotesService {
 
   editNotes(noteId: string, title: string, description: string) {
     const note: Note = { noteId: noteId, title: title, description: description };
-    this.http.put('http://localhost:3000/notes/' + noteId, note)
+    this.http.put(`${this.BASE_URL}/notes/${noteId}`, note)
       .subscribe(() => {
         const updatedNotes = [...this.notes];
         const oldNoteIndex = updatedNotes.findIndex(p => p.noteId === note.noteId);
@@ -56,7 +56,7 @@ export class NotesService {
   }
 
   deleteNote(noteId: string) {
-    this.http.delete('http://localhost:3000/notes/' + noteId)
+    this.http.delete(`${this.BASE_URL}/notes/${noteId}`)
       .subscribe(() => {
         const updatedNotes = this.notes.filter(note => note.noteId !== noteId);
         this.notes = updatedNotes;
