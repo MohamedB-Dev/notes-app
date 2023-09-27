@@ -1,18 +1,27 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-4" *ngFor="let note of notes">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><b>{{ note.title }}</b></h5>
-                    <div class="card-text-scroll">
-                        <p class="card-text">{{ note.description }}</p>
-                      </div>
-                    <div class="text-center pt-2 d-flex justify-content-around">
-                        <button class="btn btn-primary" (click)="editNote(note)">Edit</button>
-                        <button class="btn btn-danger" (click)="deleteNote(note)">Delete</button>
-                    </div>
-                </div>
+      <div class="col-md-4" *ngFor="let note of notes">
+        <div class="card mb-3">
+          <div class="card-body">
+            <ng-container *ngIf="!editStates[note.noteId]">
+              <h5 class="card-title"><b>{{ note.title }}</b></h5>
+              <div class="card-text-scroll">
+                <p class="card-text">{{ note.description }}</p>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="editStates[note.noteId]">
+              <input [(ngModel)]="editedTitles[note.noteId]" class="form-control"/>
+              <div class="py-3">
+                <textarea [(ngModel)]="editedDescriptions[note.noteId]" class="form-control" rows="5"></textarea>
+              </div>
+              <button class="btn btn-success" (click)="onSave(note.noteId)">Confirm</button>
+            </ng-container>
+            <div class="text-center d-flex justify-content-end mt-4">
+                <button class="btn btn-primary mx-3" (click)="onEdit(note.noteId)">Edit</button>
+                <button class="btn btn-danger" (click)="onDelete(note.noteId)">Delete</button>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
