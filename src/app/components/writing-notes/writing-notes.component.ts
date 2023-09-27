@@ -3,12 +3,12 @@ import { NgForm } from '@angular/forms';
 import { NotesService } from '../../services/note.service';
 
 @Component({
-  selector: 'app-notes',
-  templateUrl: './notes.component.html',
-  styleUrls: ['./notes.component.css']
+  selector: 'app-writing-notes',
+  templateUrl: './writing-notes.component.html',
+  styleUrls: ['./writing-notes.component.css']
 })
 
-export class NotesComponent  {
+export class WritingNotesComponent  {
 
   constructor(public notesService: NotesService) { }
 
