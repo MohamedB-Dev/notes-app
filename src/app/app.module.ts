@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; 
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HttpClientModule } from '@angular/common/http';
 
 // Components
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NotesComponent } from './components/notes/notes.component';
-import { ListComponent } from './components/list/list.component';
+import { WritingNotesComponent } from './components/writing-notes/writing-notes.component';
+import { NoteListComponent } from './components/note-list/note-list.component';
 
 // Angular-Material
 import { MatInputModule } from '@angular/material/input';
@@ -22,8 +22,8 @@ import { NotesService } from './services/note.service';
 @NgModule({
   declarations: [
     AppComponent,
-    NotesComponent,
-    ListComponent
+    WritingNotesComponent,
+    NoteListComponent
   ],
   imports: [
     BrowserModule,
@@ -33,8 +33,8 @@ import { NotesService } from './services/note.service';
     MatCardModule,
     MatButtonModule,
     MatExpansionModule,
+    HttpClientModule,
     MatIconModule,
-    DragDropModule
   ],
   
   providers: [
