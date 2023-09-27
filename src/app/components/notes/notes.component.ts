@@ -12,16 +12,11 @@ export class NotesComponent  {
 
   constructor(public notesService: NotesService) { }
 
-  newNote(form: NgForm) {
-    // if the form is empty, do nothing
+  addNotes(form: NgForm) {
     if (form.invalid) {
       return;
     }
-
-    // add the note
-    this.notesService.addNote(form.value.title, form.value.description);
-
-    // reset the form
+    this.notesService.addNotes(form.value.title, form.value.description);
     form.resetForm();
   }
 
