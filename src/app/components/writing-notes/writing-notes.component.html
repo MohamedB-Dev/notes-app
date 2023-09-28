@@ -9,8 +9,7 @@
         name="title"
         #title="ngModel" 
         ngModel
-        required
-        minlength="3">
+        required>
       <mat-error *ngIf="title.invalid">Please enter a title with at least 3 characters.</mat-error>
     </mat-form-field>
 
@@ -23,12 +22,14 @@
         rows="10" 
         #description="ngModel"
         ngModel
-        required></textarea>
+        required>
+      </textarea>
       <mat-error *ngIf="description.invalid">Please enter a description.</mat-error>
     </mat-form-field>
 
     <div class="text-center">
-      <button type="button" class="btn" (click)="addNotes(noteForm)" *ngIf="!title.invalid && !description.invalid">
+      <button type="button" class="btn" (click)="addNotes(noteForm)"
+        *ngIf="!title.invalid && !description.invalid && title?.value?.trim() && description?.value?.trim()">
         Add Note
       </button>
     </div>

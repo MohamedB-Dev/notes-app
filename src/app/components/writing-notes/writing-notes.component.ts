@@ -13,9 +13,6 @@ export class WritingNotesComponent  {
   constructor(public notesService: NotesService) { }
 
   addNotes(form: NgForm) {
-    if (form.invalid) {
-      return;
-    }
     this.notesService.addNotes(form.value.title, form.value.description);
     form.resetForm();
   }
