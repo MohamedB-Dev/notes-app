@@ -4,17 +4,43 @@
         <div class="card mb-3">
           <div class="card-body">
             <ng-container *ngIf="!editStates[note.noteId]">
-              <h5 class="card-title"><b>{{ note.title }}</b></h5>
+              <h5 class="card-title text-center"><b>{{ note.title }}</b></h5>
               <div class="card-text-scroll">
                 <p class="card-text">{{ note.description }}</p>
               </div>
             </ng-container>
             <ng-container *ngIf="editStates[note.noteId]">
-              <input [(ngModel)]="editedTitles[note.noteId]" class="form-control"/>
+              <input 
+                class="fw-bold"
+                matInput 
+                class="form-control"
+                type="text"
+                name="title"
+                #title="ngModel" 
+                [(ngModel)]="editedTitles[note.noteId]"
+                required
+                minlength="3">
+              <mat-error *ngIf="title.invalid">Please enter a title with at least 3 characters.</mat-error>
+
               <div class="py-3">
-                <textarea [(ngModel)]="editedDescriptions[note.noteId]" class="form-control" rows="5"></textarea>
+                <textarea 
+                  matInput 
+                  class="form-control"
+                  type="text" 
+                  name="description"
+                  rows="5"
+                  #description="ngModel"
+                  [(ngModel)]="editedDescriptions[note.noteId]"
+                  required>
+                </textarea>
+                <mat-error *ngIf="description.invalid">Please enter a description.</mat-error>
               </div>
-              <button class="btn btn-success" (click)="onSave(note.noteId)">Confirm</button>
+
+              <button class="btn btn-success" (click)="onSave(note.noteId)" 
+                *ngIf="!title.invalid && !description.invalid && title?.value?.trim() && description?.value?.trim()">
+                Confirm
+              </button>
+              
             </ng-container>
             <div class="text-center d-flex justify-content-end mt-4">
                 <button class="btn btn-primary mx-3" (click)="onEdit(note.noteId)">Edit</button>

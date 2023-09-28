@@ -28,8 +28,8 @@ export class NoteListComponent implements OnInit, OnDestroy {
 
   onEdit(noteId: string) {
     this.editStates[noteId] = true;
-    this.editedTitles[noteId] = this.notes.find(note => note.noteId === noteId)?.title || '';
-    this.editedDescriptions[noteId] = this.notes.find(note => note.noteId === noteId)?.description || '';
+    this.editedTitles[noteId] = this.notes.find(note => note.noteId === noteId)?.title;
+    this.editedDescriptions[noteId] = this.notes.find(note => note.noteId === noteId)?.description;
   }
 
   onSave(noteId: string) {
@@ -40,7 +40,11 @@ export class NoteListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(noteId: string) {
-    this.notesService.deleteNote(noteId);
+    const noteTitle = this.notes.find(note => note.noteId === noteId)?.title;
+    const confirmDelete = confirm('Are you sure you want to delete this note: ' + noteTitle);
+    if (confirmDelete) {
+      this.notesService.deleteNote(noteId);
+    }
   }
 
   ngOnDestroy(): void {
