@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Note } from '../../models/note.model';
 import { NotesService } from '../../services/note.service';
-import { Subscription } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-note-list',
@@ -9,21 +9,58 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./note-list.component.css']
 })
 
-export class NoteListComponent implements OnInit, OnDestroy {
+export class NoteListComponent implements OnInit {
   notes: Note[] = [];
-  private notesSub: Subscription;
   editStates: { [noteId: string]: boolean } = {};
   editedTitles: { [noteId: string]: string } = {};
   editedDescriptions: { [noteId: string]: string } = {};
-
+  notesSub;
+  notesPerPage = 6;
+  currentPage = 1;
+  totalNotes = 0;
   constructor(public notesService: NotesService) { }
 
-  ngOnInit(): void {
-    this.notesService.getNote();
+  ngOnInit() {
+    // Get the notes
+    this.notesService.getNote(this.notesPerPage, this.currentPage).subscribe((notes: Note[]) => {
+      this.notes = notes;
+    });
+
+    // Get the total number of notes
+    this.notesService.getTotalNotes().subscribe((totalNotes: {data: number}) => {
+      this.totalNotes = totalNotes.data;
+    });
+
+    // Update the notes
     this.notesSub = this.notesService.getNoteUpdateListener()
-      .subscribe((notes: Note[]) => {
-        this.notes = notes;
-      });
+    .subscribe((notes: Note[]) => {
+      this.notes = notes;
+      this.loadNotes();
+    });
+  }
+
+  loadNotes() {  
+    // Get the notes
+    this.notesService.getNote(this.notesPerPage, this.currentPage).subscribe((notes: Note[]) => {
+      this.notes = notes;
+    });
+
+    // Get the total number of notes
+    this.notesService.getTotalNotes().subscribe((totalNotes: {data: number}) => {
+      this.totalNotes = totalNotes.data;
+    });
+
+    // Update the notes
+    this.notesSub = this.notesService.getNoteUpdateListener()
+    .subscribe((notes: Note[]) => {
+      this.notes = notes;
+    });
+  }
+
+  onPageChange(pageData: PageEvent) {
+    this.currentPage = pageData.pageIndex + 1;
+    this.notesPerPage = pageData.pageSize;
+    this.loadNotes();
   }
 
   onEdit(noteId: string) {
@@ -33,22 +70,29 @@ export class NoteListComponent implements OnInit, OnDestroy {
   }
 
   onSave(noteId: string) {
-    this.notesService.editNotes(noteId, this.editedTitles[noteId], this.editedDescriptions[noteId]);
+    const editedTitle = this.editedTitles[noteId];
+    const editedDescription = this.editedDescriptions[noteId];
+    this.notesService.editNotes(noteId, editedTitle, editedDescription);
+      const noteToUpdate = this.notes.find(note => note.noteId === noteId);
+    if (noteToUpdate) {
+      noteToUpdate.title = editedTitle;
+      noteToUpdate.description = editedDescription;
+    }
     this.editStates[noteId] = false;
-    this.notes.find(note => note.noteId === noteId).title = this.editedTitles[noteId];
-    this.notes.find(note => note.noteId === noteId).description = this.editedDescriptions[noteId];
   }
 
   onDelete(noteId: string) {
-    const noteTitle = this.notes.find(note => note.noteId === noteId)?.title;
-    const confirmDelete = confirm('Are you sure you want to delete this note: ' + noteTitle);
-    if (confirmDelete) {
-      this.notesService.deleteNote(noteId);
+    const noteIndex = this.notes.findIndex(note => note.noteId === noteId);
+    if (noteIndex !== -1) {
+      const noteTitle = this.notes[noteIndex].title;
+      const confirmDelete = confirm('Are you sure you want to delete this note: ' + noteTitle);
+      if (confirmDelete) {
+        this.notesService.deleteNote(noteId).subscribe(() => {
+          this.notes.splice(noteIndex, 1);
+          this.loadNotes();
+        });
+      }
     }
-  }
-
-  ngOnDestroy(): void {
-    this.notesSub.unsubscribe();
   }
 
 }

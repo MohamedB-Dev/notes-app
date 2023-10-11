@@ -1,5 +1,5 @@
 import { Note } from '../models/note.model';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -15,21 +15,29 @@ export class NotesService {
 
   constructor(private http: HttpClient) { }
 
-  getNote() {
-    this.http.get<{ message: string; data: any[] }>(`${this.BASE_URL}/notes`)
-      .pipe(map((response) => {
-        return response.data.map(item => {
-          return {
-            noteId: item._id,
-            title: item.title,
-            description: item.description,
-          };
-        });
-      }))
-      .subscribe((noteData: Note[]) => {
-        this.notes = noteData;
-        this.notesUpdated.next([...this.notes]);
-      });
+  getNote(notesPerPage: number, currentPage: number): Observable<Note[]> {
+    const queryParams = `?pagesize=${notesPerPage}&page=${currentPage}`;
+    return this.http.get<{ data: any[] }>(`${this.BASE_URL}/notes` + queryParams)
+      .pipe(
+        map((response) => {
+          return response.data.map(item => {
+            return {
+              noteId: item._id,
+              title: item.title,
+              description: item.description,
+            };
+          });
+        })
+      );
+  }
+
+  getTotalNotes() {
+    return this.http.get<{ data: number }>(`${this.BASE_URL}/notes/count`)
+      .pipe(
+        map((response) => {
+          return {data: response.data};
+        })
+      );
   }
 
   addNotes(title: string, description: string) {
@@ -56,12 +64,7 @@ export class NotesService {
   }
 
   deleteNote(noteId: string) {
-    this.http.delete(`${this.BASE_URL}/notes/${noteId}`)
-      .subscribe(() => {
-        const updatedNotes = this.notes.filter(note => note.noteId !== noteId);
-        this.notes = updatedNotes;
-        this.notesUpdated.next([...this.notes]);
-      });
+    return this.http.delete(`${this.BASE_URL}/notes/${noteId}`)
   }
 
   getNoteUpdateListener() {

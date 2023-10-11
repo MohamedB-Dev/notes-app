@@ -15,6 +15,7 @@ import { MatCardModule  } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Services
 import { NotesService } from './services/note.service';
@@ -35,6 +36,7 @@ import { NotesService } from './services/note.service';
     MatExpansionModule,
     HttpClientModule,
     MatIconModule,
+    MatPaginatorModule,
   ],
   
   providers: [
