@@ -1,0 +1,40 @@
+.card {
+    margin-top: 50px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.card-header {
+    background-color: #34495e;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+}
+
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.mat-error {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.btn {
+    background-color: #34495e;
+    border-color: #3498db;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    color: #fff;
+}
