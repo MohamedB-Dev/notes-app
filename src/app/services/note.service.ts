@@ -25,6 +25,7 @@ export class NotesService {
               noteId: item._id,
               title: item.title,
               description: item.description,
+              creator: item.creator
             };
           });
         })
@@ -41,7 +42,7 @@ export class NotesService {
   }
 
   addNotes(title: string, description: string) {
-    const note: Note = { noteId: null, title: title, description: description };
+    const note: Note = { noteId: null, title: title, description: description, creator: null };
     this.http.post<{ message: string; noteId: string }>(`${this.BASE_URL}/notes`, note)
       .subscribe((responseData) => {
         const id = responseData.noteId;
@@ -52,7 +53,7 @@ export class NotesService {
   }
 
   editNotes(noteId: string, title: string, description: string) {
-    const note: Note = { noteId: noteId, title: title, description: description };
+    const note: Note = { noteId: noteId, title: title, description: description, creator: null };
     this.http.put(`${this.BASE_URL}/notes/${noteId}`, note)
       .subscribe(() => {
         const updatedNotes = [...this.notes];
