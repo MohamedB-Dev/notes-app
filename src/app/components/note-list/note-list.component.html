@@ -47,8 +47,8 @@
               
             </ng-container>
             <div class="text-center d-flex justify-content-end mt-4">
-                <button class="btn btn-primary mx-3" (click)="onEdit(note.noteId)">Edit</button>
-                <button class="btn btn-danger" (click)="onDelete(note.noteId)">Delete</button>
+                <button class="btn btn-primary mx-3" (click)="onEdit(note.noteId)" *ngIf="userIsAuthenticated">Edit</button>
+                <button class="btn btn-danger" (click)="onDelete(note.noteId)" *ngIf="userIsAuthenticated">Delete</button>
             </div>
           </div>
         </div>

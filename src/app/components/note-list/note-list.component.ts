@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Note } from '../../models/note.model';
 import { NotesService } from '../../services/note.service';
 import { PageEvent } from '@angular/material/paginator';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-note-list',
@@ -10,6 +12,10 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class NoteListComponent implements OnInit {
+  private authSubs: Subscription;
+  userIsAuthenticated = false;
+  userId: string;
+  username: string;
   notes: Note[] = [];
   editStates: { [noteId: string]: boolean } = {};
   editedTitles: { [noteId: string]: string } = {};
@@ -18,7 +24,8 @@ export class NoteListComponent implements OnInit {
   notesPerPage = 6;
   currentPage = 1;
   totalNotes = 0;
-  constructor(public notesService: NotesService) { }
+
+  constructor(public notesService: NotesService, private authService :AuthService) { }
 
   ngOnInit() {
     // Get the notes
@@ -37,6 +44,20 @@ export class NoteListComponent implements OnInit {
       this.notes = notes;
       this.loadNotes();
     });
+
+    // Get the user id and username
+    this.userId = this.authService.getUserId();
+    this.username = this.authService.getUsername();
+
+    // Get the authentication status
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authSubs = this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
+      this.userId = this.authService.getUserId();
+      this.username = this.authService.getUsername();
+      this.userIsAuthenticated = isAuthenticated;
+    });
+
+
   }
 
   loadNotes() {  
@@ -93,6 +114,11 @@ export class NoteListComponent implements OnInit {
         });
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.notesSub.unsubscribe();
+    this.authSubs.unsubscribe();
   }
 
 }
